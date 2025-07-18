@@ -19,7 +19,7 @@ export class UsersService {
     return createUser.save();
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<(User & { _id: string }) | null> {
     return this.userModel.findOne({ email });
   }
 }
