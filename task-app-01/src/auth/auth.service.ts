@@ -16,11 +16,11 @@ export class AuthService {
   async validateUser(
     email: string,
     password: string,
-  ): Promise<{ email: string; _id: string } | null> {
+  ): Promise<{ email: string; _id: Object } | null> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(password, user.password))) {
-      const { password, ...result } = user;
-      return result;
+      const { email, _id } = user.toObject();
+      return { email, _id };
     }
     return null;
   }
@@ -30,6 +30,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
     return {
       access_token: this.jwtService.sign({ email: user.email, sub: user._id }),
     };

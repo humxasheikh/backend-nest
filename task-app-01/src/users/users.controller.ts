@@ -5,9 +5,12 @@ import {
   Body,
   Param,
   ConflictException,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -25,8 +28,14 @@ export class UsersController {
     return { message: 'User created', userId: user._id };
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  myProfile(@Request() req) {
+    return req.user;
+  }
+  @UseGuards()
   @Get(':email')
-  findAll(@Param('email') email: string) {
+  findByEmail(@Param('email') email: string, @Request() req) {
     return this.usersService.findByEmail(email);
   }
 }
