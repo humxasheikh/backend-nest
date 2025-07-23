@@ -13,7 +13,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const createUser = new this.userModel({
-      email: createUserDto.email,
+      ...createUserDto,
       password: hashedPassword,
     });
     return createUser.save();
