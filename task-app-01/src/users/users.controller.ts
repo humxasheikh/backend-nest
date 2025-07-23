@@ -24,6 +24,7 @@ export class UsersController {
     if (existingUser) {
       throw new ConflictException('User already exists.');
     }
+    console.log(createUserDto.name);
     const user = await this.usersService.create(createUserDto);
     return { message: 'User created', userId: user._id };
   }
